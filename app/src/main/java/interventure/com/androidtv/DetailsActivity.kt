@@ -18,12 +18,17 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 
 /**
- * Loads [MainFragment].
+ * Details activity class that loads [VideoDetailsFragment] class.
  */
-class MainActivity : FragmentActivity() {
+class DetailsActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_details)
+    }
+
+    companion object {
+        const val SHARED_ELEMENT_NAME = "hero"
+        const val MOVIE = "Movie"
     }
 }

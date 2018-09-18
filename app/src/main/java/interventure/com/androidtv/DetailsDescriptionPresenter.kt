@@ -14,16 +14,17 @@
 
 package interventure.com.androidtv
 
-import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter
 
-/**
- * Loads [MainFragment].
- */
-class MainActivity : FragmentActivity() {
+class DetailsDescriptionPresenter : AbstractDetailsDescriptionPresenter() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun onBindDescription(
+            viewHolder: AbstractDetailsDescriptionPresenter.ViewHolder,
+            item: Any) {
+        val movie = item as Movie
+
+        viewHolder.title.text = movie.title
+        viewHolder.subtitle.text = movie.studio
+        viewHolder.body.text = movie.description
     }
 }
