@@ -148,7 +148,16 @@ class MainFragment : BrowseFragment() {
                 row: Row) {
 
             if (item is Movie) {
-                Toast.makeText(activity, "Start video detail screen", Toast.LENGTH_LONG).show()
+                Log.d(TAG, "Item: " + item.toString())
+                val intent = Intent(activity, DetailsActivity::class.java)
+                intent.putExtra(DetailsActivity.MOVIE, item)
+
+                val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        activity,
+                        (itemViewHolder.view as ImageCardView).mainImageView,
+                        DetailsActivity.SHARED_ELEMENT_NAME)
+                        .toBundle()
+                activity.startActivity(intent, bundle)
             } else if (item is String) {
                 if (item.contains(getString(R.string.error_fragment))) {
                     val intent = Intent(activity, BrowseErrorActivity::class.java)
