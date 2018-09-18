@@ -18,44 +18,28 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.v17.leanback.app.DetailsFragment
-import android.support.v17.leanback.app.DetailsFragmentBackgroundController
-import android.support.v17.leanback.widget.Action
-import android.support.v17.leanback.widget.ArrayObjectAdapter
-import android.support.v17.leanback.widget.ClassPresenterSelector
-import android.support.v17.leanback.widget.DetailsOverviewRow
-import android.support.v17.leanback.widget.FullWidthDetailsOverviewRowPresenter
-import android.support.v17.leanback.widget.FullWidthDetailsOverviewSharedElementHelper
-import android.support.v17.leanback.widget.HeaderItem
-import android.support.v17.leanback.widget.ImageCardView
-import android.support.v17.leanback.widget.ListRow
-import android.support.v17.leanback.widget.ListRowPresenter
-import android.support.v17.leanback.widget.OnActionClickedListener
-import android.support.v17.leanback.widget.OnItemViewClickedListener
-import android.support.v17.leanback.widget.Presenter
-import android.support.v17.leanback.widget.Row
-import android.support.v17.leanback.widget.RowPresenter
+import android.support.v17.leanback.app.DetailsSupportFragment
+import android.support.v17.leanback.app.DetailsSupportFragmentBackgroundController
+import android.support.v17.leanback.widget.*
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.widget.Toast
-
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
-
-import java.util.Collections
+import java.util.*
 
 /**
  * A wrapper fragment for leanback details screens.
  * It shows a detailed view of video and its metadata plus related videos.
  */
-class VideoDetailsFragment : DetailsFragment() {
+class VideoDetailsFragment : DetailsSupportFragment() {
 
     private var mSelectedMovie: Movie? = null
 
-    private lateinit var mDetailsBackground: DetailsFragmentBackgroundController
+    private lateinit var mDetailsBackground: DetailsSupportFragmentBackgroundController
     private lateinit var mPresenterSelector: ClassPresenterSelector
     private lateinit var mAdapter: ArrayObjectAdapter
 
@@ -63,9 +47,9 @@ class VideoDetailsFragment : DetailsFragment() {
         Log.d(TAG, "onCreate DetailsFragment")
         super.onCreate(savedInstanceState)
 
-        mDetailsBackground = DetailsFragmentBackgroundController(this)
+        mDetailsBackground = DetailsSupportFragmentBackgroundController(this)
 
-        mSelectedMovie = activity.intent.getSerializableExtra(DetailsActivity.MOVIE) as Movie
+        mSelectedMovie = activity?.intent?.getSerializableExtra(DetailsActivity.MOVIE) as Movie
         if (mSelectedMovie != null) {
             mPresenterSelector = ClassPresenterSelector()
             mAdapter = ArrayObjectAdapter(mPresenterSelector)
@@ -100,9 +84,9 @@ class VideoDetailsFragment : DetailsFragment() {
     private fun setupDetailsOverviewRow() {
         Log.d(TAG, "doInBackground: " + mSelectedMovie?.toString())
         val row = DetailsOverviewRow(mSelectedMovie)
-        row.imageDrawable = ContextCompat.getDrawable(activity, R.drawable.default_background)
-        val width = convertDpToPixel(activity, DETAIL_THUMB_WIDTH)
-        val height = convertDpToPixel(activity, DETAIL_THUMB_HEIGHT)
+        row.imageDrawable = ContextCompat.getDrawable(activity!!, R.drawable.default_background)
+        val width = convertDpToPixel(activity!!, DETAIL_THUMB_WIDTH)
+        val height = convertDpToPixel(activity!!, DETAIL_THUMB_HEIGHT)
         Glide.with(activity)
                 .load(mSelectedMovie?.cardImageUrl)
                 .centerCrop()
@@ -142,7 +126,7 @@ class VideoDetailsFragment : DetailsFragment() {
         // Set detail background.
         val detailsPresenter = FullWidthDetailsOverviewRowPresenter(DetailsDescriptionPresenter())
         detailsPresenter.backgroundColor =
-                ContextCompat.getColor(activity, R.color.selected_background)
+                ContextCompat.getColor(activity!!, R.color.selected_background)
 
         // Hook up transition element.
         val sharedElementHelper = FullWidthDetailsOverviewSharedElementHelper()
@@ -153,7 +137,9 @@ class VideoDetailsFragment : DetailsFragment() {
 
         detailsPresenter.onActionClickedListener = OnActionClickedListener { action ->
             if (action.id == ACTION_WATCH_TRAILER) {
-                Toast.makeText(activity, "Start video player", Toast.LENGTH_LONG).show()
+                val intent = Intent(activity, PlaybackActivity::class.java)
+                intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie)
+                startActivity(intent)
             } else {
                 Toast.makeText(activity, action.toString(), Toast.LENGTH_SHORT).show()
             }
@@ -194,25 +180,25 @@ class VideoDetailsFragment : DetailsFragment() {
 
                 val bundle =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                activity,
+                                activity!!,
                                 (itemViewHolder?.view as ImageCardView).mainImageView,
                                 DetailsActivity.SHARED_ELEMENT_NAME)
                                 .toBundle()
-                activity.startActivity(intent, bundle)
+                activity?.startActivity(intent, bundle)
             }
         }
     }
 
     companion object {
-        private val TAG = "VideoDetailsFragment"
+        private const val TAG = "VideoDetailsFragment"
 
-        private val ACTION_WATCH_TRAILER = 1L
-        private val ACTION_RENT = 2L
-        private val ACTION_BUY = 3L
+        private const val ACTION_WATCH_TRAILER = 1L
+        private const val ACTION_RENT = 2L
+        private const val ACTION_BUY = 3L
 
-        private val DETAIL_THUMB_WIDTH = 274
-        private val DETAIL_THUMB_HEIGHT = 274
+        private const val DETAIL_THUMB_WIDTH = 274
+        private const val DETAIL_THUMB_HEIGHT = 274
 
-        private val NUM_COLS = 10
+        private const val NUM_COLS = 10
     }
 }

@@ -14,13 +14,14 @@
 package interventure.com.androidtv
 
 import android.os.Bundle
+import android.support.v17.leanback.app.ErrorSupportFragment
 import android.support.v4.content.ContextCompat
 import android.view.View
 
 /**
- * This class demonstrates how to extend [android.support.v17.leanback.app.ErrorFragment].
+ * This class demonstrates how to extend [android.support.v17.leanback.app.ErrorSupportFragment].
  */
-class ErrorFragment : android.support.v17.leanback.app.ErrorFragment() {
+class ErrorFragment : ErrorSupportFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,17 +29,17 @@ class ErrorFragment : android.support.v17.leanback.app.ErrorFragment() {
     }
 
     internal fun setErrorContent() {
-        imageDrawable = ContextCompat.getDrawable(activity, R.drawable.lb_ic_sad_cloud)
+        imageDrawable = ContextCompat.getDrawable(activity!!, R.drawable.lb_ic_sad_cloud)
         message = resources.getString(R.string.error_fragment_message)
         setDefaultBackground(TRANSLUCENT)
 
         buttonText = resources.getString(R.string.dismiss_error)
         buttonClickListener = View.OnClickListener {
-            fragmentManager.beginTransaction().remove(this@ErrorFragment).commit()
+            fragmentManager?.beginTransaction()?.remove(this@ErrorFragment)?.commit()
         }
     }
 
     companion object {
-        private val TRANSLUCENT = true
+        private const val TRANSLUCENT = true
     }
 }
