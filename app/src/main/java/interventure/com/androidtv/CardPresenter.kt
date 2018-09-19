@@ -64,8 +64,8 @@ class CardPresenter : Presenter() {
             cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT)
             Glide.with(viewHolder.view.context.applicationContext)
                     .load(movie.cardImageUrl)
-//                    .centerCrop()
-//                    .error(mDefaultCardImage)
+                    .centerCrop()
+                    .error(mDefaultCardImage)
                     .into(cardView.mainImageView)
         }
     }
@@ -87,9 +87,9 @@ class CardPresenter : Presenter() {
     }
 
     companion object {
-        private val TAG = "CardPresenter"
+        private const val TAG = "CardPresenter"
 
-        private val CARD_WIDTH = 313
-        private val CARD_HEIGHT = 176
+        private const val CARD_WIDTH = 313
+        private const val CARD_HEIGHT = 176
     }
 }

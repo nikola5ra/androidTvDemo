@@ -19,13 +19,13 @@ import android.os.Bundle
 import android.support.v17.leanback.app.VideoSupportFragment
 import android.support.v17.leanback.app.VideoSupportFragmentGlueHost
 import android.support.v17.leanback.media.MediaPlayerAdapter
-import android.support.v17.leanback.media.PlaybackTransportControlGlue
 import android.support.v17.leanback.widget.PlaybackControlsRow
+import android.widget.Toast
 
 /** Handles video playback with media controls. */
-class PlaybackVideoFragment : VideoSupportFragment() {
+class PlaybackVideoFragment : VideoSupportFragment(), ActionListener {
 
-    private lateinit var mTransportControlGlue: PlaybackTransportControlGlue<MediaPlayerAdapter>
+    private lateinit var mTransportControlGlue: CustomPlaybackTransportControlGlue<MediaPlayerAdapter>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class PlaybackVideoFragment : VideoSupportFragment() {
         val playerAdapter = MediaPlayerAdapter(activity)
         playerAdapter.setRepeatAction(PlaybackControlsRow.RepeatAction.INDEX_NONE)
 
-        mTransportControlGlue = PlaybackTransportControlGlue(getActivity(), playerAdapter)
+        mTransportControlGlue = CustomPlaybackTransportControlGlue(activity!!, playerAdapter, this)
         mTransportControlGlue.host = glueHost
         mTransportControlGlue.title = title
         mTransportControlGlue.subtitle = description
@@ -49,5 +49,13 @@ class PlaybackVideoFragment : VideoSupportFragment() {
     override fun onPause() {
         super.onPause()
         mTransportControlGlue.pause()
+    }
+
+    override fun onActionNext() {
+        Toast.makeText(context, "Play next media", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onActionPrevious() {
+        Toast.makeText(context, "Play previous media", Toast.LENGTH_LONG).show()
     }
 }

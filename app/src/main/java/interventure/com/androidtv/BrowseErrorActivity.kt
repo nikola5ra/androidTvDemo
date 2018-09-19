@@ -13,10 +13,10 @@
  */
 package interventure.com.androidtv
 
-import android.app.Activity
 import android.app.Fragment
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.app.FragmentActivity
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +27,7 @@ import android.widget.ProgressBar
 /**
  * BrowseErrorActivity shows how to use ErrorFragment.
  */
-class BrowseErrorActivity : Activity() {
+class BrowseErrorActivity : FragmentActivity() {
 
     private lateinit var mErrorFragment: ErrorFragment
     private lateinit var mSpinnerFragment: SpinnerFragment
@@ -41,7 +41,7 @@ class BrowseErrorActivity : Activity() {
 
     private fun testError() {
         mErrorFragment = ErrorFragment()
-        fragmentManager
+        supportFragmentManager
                 .beginTransaction()
                 .add(R.id.main_browse_fragment, mErrorFragment)
                 .commit()
@@ -75,8 +75,8 @@ class BrowseErrorActivity : Activity() {
     }
 
     companion object {
-        private val TIMER_DELAY = 3000L
-        private val SPINNER_WIDTH = 100
-        private val SPINNER_HEIGHT = 100
+        private const val TIMER_DELAY = 3000L
+        private const val SPINNER_WIDTH = 100
+        private const val SPINNER_HEIGHT = 100
     }
 }
